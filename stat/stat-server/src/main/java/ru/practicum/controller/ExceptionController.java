@@ -14,12 +14,12 @@ import java.io.StringWriter;
 public class ExceptionController {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Error handleException(Exception exception) {
-        log.error("Error", exception);
+    public Error handleThrowable(Throwable throwable) {
+        log.error("Unexpected error occurred", throwable);
         StringWriter out = new StringWriter();
-        exception.printStackTrace(new PrintWriter(out));
+        throwable.printStackTrace(new PrintWriter(out));
         String stackTrace = out.toString();
-        return new Error(exception.getMessage(), stackTrace);
+        return new Error(throwable.getMessage(), stackTrace);
     }
 
     @AllArgsConstructor
