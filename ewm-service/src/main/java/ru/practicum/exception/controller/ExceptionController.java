@@ -3,7 +3,6 @@ package ru.practicum.exception.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -99,30 +98,6 @@ public class ExceptionController {
                 exc.getMessage(),
                 "Request not valid.",
                 "400",
-                LocalDateTime.now()
-        );
-    }
-
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handle(MissingServletRequestParameterException exc) {
-        return new ApiError(
-                null,
-                exc.getMessage(),
-                "Required request parameter is missing.",
-                "400",
-                LocalDateTime.now()
-        );
-    }
-
-    @ExceptionHandler(Throwable.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiError handle(Throwable exc) {
-        return new ApiError(
-                null,
-                exc.getMessage(),
-                "Unexpected internal server error",
-                "500",
                 LocalDateTime.now()
         );
     }
