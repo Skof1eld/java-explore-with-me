@@ -1,7 +1,9 @@
 package ru.practicum.category.controller;
 
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.category.data.dto.CategoryDto;
 import ru.practicum.category.service.CategoryService;
@@ -15,12 +17,13 @@ import java.util.List;
 @RequestMapping("/categories")
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class CategoryPublicController {
     private final CategoryService categoryService;
 
     @GetMapping
-    List<CategoryDto> getAllCategories(@RequestParam(defaultValue = "0") int from,
-                                       @RequestParam(defaultValue = "10") int size) {
+    List<CategoryDto> getAllCategories(@RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                       @RequestParam(defaultValue = "10") @Positive int size) {
         List<CategoryDto> categories = categoryService.getAllCategories(from, size);
         log.info(String.format("%s: categories are returned: %s", LocalDateTime.now(), categories.toString()));
         return categories;

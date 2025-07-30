@@ -3,6 +3,7 @@ package ru.practicum.category.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.category.data.dto.CategoryDto;
 import ru.practicum.category.data.dto.NewCategoryDto;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @RequestMapping("/admin/categories")
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class CategoryAdminController {
     private final CategoryService categoryService;
 

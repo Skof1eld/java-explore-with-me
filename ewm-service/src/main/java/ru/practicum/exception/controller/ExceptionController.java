@@ -101,4 +101,16 @@ public class ExceptionController {
                 LocalDateTime.now()
         );
     }
+
+    @ExceptionHandler(Throwable.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiError handle(Throwable exc) {
+        return new ApiError(
+                null,
+                exc.getMessage(),
+                "Unexpected internal server error",
+                "500",
+                LocalDateTime.now()
+        );
+    }
 }

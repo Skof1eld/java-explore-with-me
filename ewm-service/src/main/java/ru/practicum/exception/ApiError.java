@@ -17,5 +17,5 @@ public class ApiError {
     private String reason;
     private String status;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    LocalDateTime timestamp;
+    private LocalDateTime timestamp;
 }
