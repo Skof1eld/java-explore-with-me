@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,29 +13,40 @@ import jakarta.validation.ConstraintViolationException;
 
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
 public class ExceptionController {
 
-    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handle(MissingServletRequestParameterException exc) {
+    public ApiError handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> String.format("Field '%s': %s", error.getField(), error.getDefaultMessage()))
+                .collect(Collectors.joining(", "));
+
         return new ApiError(
                 null,
-                "Required parameter '" + exc.getParameterName() + "' is not present",
+                errorMessage,
                 "Validation failed",
                 "400",
                 LocalDateTime.now()
         );
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handle(MethodArgumentNotValidException exc) {
+    public ApiError handleConstraintViolation(ConstraintViolationException ex) {
+        String errorMessage = ex.getConstraintViolations().stream()
+                .map(v -> String.format("Field '%s': %s",
+                        v.getPropertyPath().toString().split("\\.")[1],
+                        v.getMessage()))
+                .collect(Collectors.joining(", "));
+
         return new ApiError(
                 null,
-                "Invalid request data",
+                errorMessage,
                 "Validation failed",
                 "400",
                 LocalDateTime.now()
@@ -128,9 +138,9 @@ public class ExceptionController {
         );
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiError handleUnexpectedException(Exception exc) {
+    public ApiError handleUnexpectedException(Throwable exc) {
         log.error("Unexpected error occurred", exc);
         return new ApiError(
                 null,
