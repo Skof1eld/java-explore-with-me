@@ -12,7 +12,6 @@ import jakarta.validation.ConstraintViolationException;
 
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
