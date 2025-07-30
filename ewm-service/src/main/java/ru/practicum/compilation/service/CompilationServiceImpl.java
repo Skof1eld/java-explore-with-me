@@ -17,6 +17,7 @@ import ru.practicum.event.data.Event;
 import ru.practicum.event.data.EventRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,7 +66,9 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional(readOnly = true)
     public CompilationDto getCompilationById(long compId) {
-        return CompilationMapper.toCompilationDto(compilationRepository.findById(compId).orElseThrow());
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new NoSuchElementException("Compilation with id=" + compId + " not found"));
+        return CompilationMapper.toCompilationDto(compilation);
     }
 
     private Pageable getPageable(int from, int size) {

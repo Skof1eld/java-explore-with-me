@@ -19,40 +19,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ExceptionController {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> String.format("Field '%s': %s", error.getField(), error.getDefaultMessage()))
-                .collect(Collectors.joining(", "));
-
-        return new ApiError(
-                null,
-                errorMessage,
-                "Validation failed",
-                "400",
-                LocalDateTime.now()
-        );
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleConstraintViolation(ConstraintViolationException ex) {
-        String errorMessage = ex.getConstraintViolations().stream()
-                .map(v -> String.format("Field '%s': %s",
-                        v.getPropertyPath().toString().split("\\.")[1],
-                        v.getMessage()))
-                .collect(Collectors.joining(", "));
-
-        return new ApiError(
-                null,
-                errorMessage,
-                "Validation failed",
-                "400",
-                LocalDateTime.now()
-        );
-    }
-
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handle(NoSuchElementException exc) {
@@ -134,19 +100,6 @@ public class ExceptionController {
                 exc.getMessage(),
                 "Request not valid.",
                 "400",
-                LocalDateTime.now()
-        );
-    }
-
-    @ExceptionHandler(Throwable.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiError handleUnexpectedException(Throwable exc) {
-        log.error("Unexpected error occurred", exc);
-        return new ApiError(
-                null,
-                "An unexpected error occurred.",
-                "Internal Server Error",
-                "500",
                 LocalDateTime.now()
         );
     }
