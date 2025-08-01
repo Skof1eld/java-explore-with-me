@@ -1,3 +1,3 @@
-FROM amazoncorretto:11-alpine-jdk
-COPY target/*.jar ewm-service.jar
+FROM amazoncorretto:21-alpine
+COPY target/service-0.0.1-SNAPSHOT.jar ewm-service.jar
 ENTRYPOINT ["java","-jar","/ewm-service.jar"]
