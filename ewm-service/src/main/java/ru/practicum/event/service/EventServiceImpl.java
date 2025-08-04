@@ -128,7 +128,7 @@ public class EventServiceImpl implements EventService {
             return rejectAll(requestsToConfirm);
         }
         validateParticipationLimitNotReached(event);
-        if (!event.getRequestModeration() || updateRequest.getStatus() == RequestStatus.CONFIRMED) {
+        if (!event.getRequestModeration() || updateRequest.getStatus() == RequestStatus.CONFIRMED) {    //if no pre-moderation required - return all as confirmed
             return confirmAllUntilLimitReached(event, requestsToConfirm);
         }
         throw new RequestNotValidException("Request status not valid.");
@@ -174,6 +174,7 @@ public class EventServiceImpl implements EventService {
         statClient.saveEndpointHit("ewm-main-service", String.format("/events/%d", eventId), request.getRemoteAddr(), LocalDateTime.now().format(EventMapper.dateTimeFormatter));
         return EventMapper.toEventFullDto(event, getConfirmedRequests(eventId), getSingleEventViews(eventId));
     }
+
 
     private Event patchEventFields(Event event, UpdateEventRequest updateRequest) {
         if (updateRequest.getAnnotation() != null) {
@@ -238,7 +239,7 @@ public class EventServiceImpl implements EventService {
             event.setState(determineEventState(eventState, stateAction));
         }
         if (stateAction == AdminEventStateAction.PUBLISH_EVENT) {
-            event.setPublishedOn(LocalDateTime.now());
+            event.setPublishedOn(LocalDateTime.now());  //unreachable if event was published earlier (exception in snippet above)
         }
     }
 
@@ -395,7 +396,7 @@ public class EventServiceImpl implements EventService {
         NumberExpression<Integer> limit = request.event.participantLimit.as("limit");
         NumberExpression<Long> confirmed = request.status.count().as("confirmed");
 
-        return query.select(id, limit, confirmed)
+        return query.select(id, limit, confirmed)     //get all event ids with participation available
                 .from(request)
                 .where(request.status.eq(RequestStatus.CONFIRMED))
                 .groupBy(id)

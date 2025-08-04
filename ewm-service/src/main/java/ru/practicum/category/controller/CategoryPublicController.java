@@ -3,7 +3,6 @@ package ru.practicum.category.controller;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.category.data.dto.CategoryDto;
 import ru.practicum.category.service.CategoryService;
@@ -17,7 +16,6 @@ import java.util.List;
 @RequestMapping("/categories")
 @Slf4j
 @RequiredArgsConstructor
-@Validated
 public class CategoryPublicController {
     private final CategoryService categoryService;
 
