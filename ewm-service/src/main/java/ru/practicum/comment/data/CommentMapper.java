@@ -1,7 +1,5 @@
 package ru.practicum.comment.data;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.experimental.UtilityClass;
 import ru.practicum.comment.data.dto.CommentDto;
 import ru.practicum.comment.data.dto.NewCommentDto;
