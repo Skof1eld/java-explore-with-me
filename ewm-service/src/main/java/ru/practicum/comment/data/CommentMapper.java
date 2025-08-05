@@ -12,7 +12,6 @@ import ru.practicum.user.data.dto.UserMapper;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @UtilityClass
 public class CommentMapper {
     public Comment toComment(User commentator, Event event, NewCommentDto newCommentDto, LocalDateTime created) {
