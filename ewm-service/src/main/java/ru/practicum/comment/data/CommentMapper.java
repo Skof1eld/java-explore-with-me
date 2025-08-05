@@ -2,6 +2,7 @@ package ru.practicum.comment.data;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import ru.practicum.comment.data.dto.CommentDto;
 import ru.practicum.comment.data.dto.NewCommentDto;
 import ru.practicum.event.data.Event;
@@ -12,8 +13,9 @@ import ru.practicum.user.data.dto.UserMapper;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class CommentMapper {
-    public static Comment toComment(User commentator, Event event, NewCommentDto newCommentDto, LocalDateTime created) {
+    public Comment toComment(User commentator, Event event, NewCommentDto newCommentDto, LocalDateTime created) {
         return Comment.builder()
                 .text(newCommentDto.getText())
                 .commentator(commentator)
@@ -22,7 +24,7 @@ public class CommentMapper {
                 .build();
     }
 
-    public static CommentDto toCommentDto(Comment comment) {
+    public CommentDto toCommentDto(Comment comment) {
         return CommentDto.builder()
                 .id(comment.getId())
                 .text(comment.getText())
